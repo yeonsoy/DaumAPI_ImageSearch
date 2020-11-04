@@ -39,7 +39,7 @@ class SearchData {
         return valuesMap
     }
 
-    fun getQuery( ): Map<String, String> {
+    private fun getQuery( ): Map<String, String> {
         val map = getDefaultMap()
 
         for (key in queryValuesMap().keys) {

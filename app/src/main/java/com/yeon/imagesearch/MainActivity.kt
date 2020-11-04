@@ -1,19 +1,17 @@
-package com.yeon.imagesearch.view
+package com.yeon.imagesearch
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.arch.paging.PagedList
-import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.util.Log
 import android.view.View
 import com.jakewharton.rxbinding2.widget.RxTextView
-import com.yeon.imagesearch.R
 import com.yeon.imagesearch.model.ImageModel
 import com.yeon.imagesearch.model.Status
+import com.yeon.imagesearch.view.BaseViewModelActivity
 import com.yeon.imagesearch.view.adapter.GridSpacingItemDecoration
 import com.yeon.imagesearch.view.adapter.ImageAdapter
 import com.yeon.imagesearch.viewmodel.ImageViewModel
@@ -23,13 +21,11 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.util.concurrent.TimeUnit
 
 
-class MainActivity : AppCompatActivity(), ImageViewModel.ImageViewModelInterface {
+class MainActivity : BaseViewModelActivity<ImageViewModel>(), ImageViewModel.ImageViewModelInterface {
 
-    private lateinit var observer: DisposableLifecycleObserver
     private lateinit var adapter: ImageAdapter
-    var mViewModel: ImageViewModel? = null
 
-    fun viewModel(): ImageViewModel {
+    override fun viewModel(): ImageViewModel {
         val factory = ImageViewModel.ImageViewModelFactory(application, this)
         return ViewModelProviders.of(this, factory)
             .get<ImageViewModel>(ImageViewModel::class.java)
@@ -37,20 +33,10 @@ class MainActivity : AppCompatActivity(), ImageViewModel.ImageViewModelInterface
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val lifecycle = this.lifecycle
-        observer = DisposableLifecycleObserver(lifecycle)
-        lifecycle.addObserver(observer)
-        try {
-            if (application != null) {
-                mViewModel = viewModel()
-            }
-        } catch (e: Exception) {
-            reStart()
-        }
-
         setContentView(R.layout.activity_main)
         setMessageTextSetting(getString(R.string.input_text_plz))
         adapterInit()
+
 
         mViewModel?.dataLayoutSubject?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribe { visibility ->
@@ -64,7 +50,7 @@ class MainActivity : AppCompatActivity(), ImageViewModel.ImageViewModelInterface
             }
 
         RxTextView.textChanges(et_query)
-            .throttleLast(1, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
+            .throttleLast(1, TimeUnit.SECONDS,AndroidSchedulers.mainThread())
             .subscribe(
                 { text ->
                     if (text.isNotEmpty()) {
@@ -121,14 +107,9 @@ class MainActivity : AppCompatActivity(), ImageViewModel.ImageViewModelInterface
 
                 }
             })
-        }
-    }
 
-    private fun reStart() {
-        val intent = Intent(this, MainActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
+
+        }
     }
 
     private fun setMessageTextSetting(msg: String) {
@@ -137,11 +118,7 @@ class MainActivity : AppCompatActivity(), ImageViewModel.ImageViewModelInterface
 
 
     override fun putDisposableMap(tag: String, disposable: Disposable) {
-        observer.putDisposableMap(tag, disposable)
-    }
-
-    override fun removeDisposable(tag: String) {
-        TODO("Not yet implemented")
+        super.putDisposableMap(tag, disposable)
     }
 
 

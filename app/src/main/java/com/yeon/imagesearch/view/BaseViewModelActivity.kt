@@ -1,13 +1,12 @@
 package com.yeon.imagesearch.view
 
-
 import android.arch.lifecycle.ViewModel
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.yeon.imagesearch.MainActivity
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-
 
 abstract class BaseViewModelActivity<T : ViewModel> : AppCompatActivity() {
     private lateinit var observer: DisposableLifecycleObserver
@@ -15,6 +14,7 @@ abstract class BaseViewModelActivity<T : ViewModel> : AppCompatActivity() {
     protected abstract fun viewModel(): T
 
     protected var mViewModel: T? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +30,7 @@ abstract class BaseViewModelActivity<T : ViewModel> : AppCompatActivity() {
         }
 
     }
+
 
     private fun reStart() {
         val intent = Intent(this, MainActivity::class.java)
@@ -50,6 +51,8 @@ abstract class BaseViewModelActivity<T : ViewModel> : AppCompatActivity() {
         observer.putDisposableMap(tag, disposable)
 
     }
+
+
 
     fun getDisposable(): CompositeDisposable {
         return observer.getDisposable()
