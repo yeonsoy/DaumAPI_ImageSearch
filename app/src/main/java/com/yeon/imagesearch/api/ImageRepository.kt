@@ -31,9 +31,7 @@ class ImageRepository : BaseImageRepository<ImageModel>() {
             }
     }
 
-    override fun getResponse(): Single<BaseModel> {
-        return  null!!
-    }
+    override fun getResponse(): Single<BaseModel> = null!!
 
     fun getResponse(query: String, sort: String = "accuracy", page : Int = 1,  size : Int = 80 ) : Single<ImageModel> {
         this.query = query
@@ -41,7 +39,7 @@ class ImageRepository : BaseImageRepository<ImageModel>() {
         this.page = page
         this.size = size
 
-        return RetrofitManager.getKaKaoAPI()
+        return RetrofitManager.getKakaoAPI()
             .getSearchImage(getQuery())
     }
 

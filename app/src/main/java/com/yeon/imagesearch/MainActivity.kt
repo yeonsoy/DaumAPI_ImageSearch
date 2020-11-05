@@ -34,7 +34,6 @@ class MainActivity : BaseViewModelActivity<ImageViewModel>(), ImageViewModel.Ima
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Fresco.initialize(this)
         setContentView(R.layout.activity_main)
 
         /*
@@ -75,7 +74,7 @@ class MainActivity : BaseViewModelActivity<ImageViewModel>(), ImageViewModel.Ima
                 { text ->
                     if (text.isNotEmpty()) {
                         removeDisposable("list")
-                        mViewModel?.getImages(text.toString(), "recency")
+                        mViewModel?.getImages(text.toString(), "accuracy")
                         mViewModel?.dataLayoutSubject?.onNext(false)
                     } else {
                         setMessageTextSetting(getString(R.string.input_text_plz))
@@ -127,15 +126,12 @@ class MainActivity : BaseViewModelActivity<ImageViewModel>(), ImageViewModel.Ima
 
                 }
             })
-
-
         }
     }
 
     private fun setMessageTextSetting(msg: String) {
         tv_msg.text = msg
     }
-
 
     override fun putDisposableMap(tag: String, disposable: Disposable) {
         super.putDisposableMap(tag, disposable)

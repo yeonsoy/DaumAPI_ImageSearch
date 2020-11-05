@@ -15,7 +15,7 @@ import io.reactivex.schedulers.Schedulers
 // Paging 사용
 // https://codechacha.com/ko/android-jetpack-paging/
 
-class ImageDataSource(private val compositeDisposable: CompositeDisposable, private val query: String, private val sort: String, private val viewModelInterface: ImageViewModel.ImageViewModelInterface)
+class ImageDataSource(private val compositeDisposable: CompositeDisposable, private val query: String, private val sort: String, private  val viewModelInterface: ImageViewModel.ImageViewModelInterface)
     : PageKeyedDataSource<Int, ImageModel.Documents>() {
 
     var networkStateLiveData: MutableLiveData<NetworkState> = MutableLiveData()
@@ -45,7 +45,7 @@ class ImageDataSource(private val compositeDisposable: CompositeDisposable, priv
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, ImageModel.Documents>) {
         networkStateLiveData.postValue(NetworkState.LOADING)
-        viewModelInterface.putDisposableMap("list",ImageRepository.instance.getResponse(query, sort, params.key + 1, 80)
+        viewModelInterface.putDisposableMap("list", ImageRepository.instance.getResponse(query, sort, params.key + 1, 80)
             .subscribeOn(Schedulers.io())
             .subscribe({ imageQueryList ->
                 networkStateLiveData.postValue(NetworkState.LOADED)
@@ -55,7 +55,7 @@ class ImageDataSource(private val compositeDisposable: CompositeDisposable, priv
 
 
             }, { throwable ->
-                Log.e("loadAfter", throwable.message.toString());
+                throwable.message?.let { Log.e("loadAfter", it) };
                 setRetry(Action { loadAfter(params, callback) })
                 networkStateLiveData.postValue(NetworkState.error(throwable.message))
             }))
@@ -79,7 +79,7 @@ class ImageDataSource(private val compositeDisposable: CompositeDisposable, priv
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                }, { throwable -> Log.e("retry", throwable.message.toString()) }))
+                }, { throwable -> throwable.message?.let { Log.e("retry", it) } }))
         }
     }
 }

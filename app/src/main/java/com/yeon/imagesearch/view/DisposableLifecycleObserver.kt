@@ -6,7 +6,6 @@ import android.arch.lifecycle.OnLifecycleEvent
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
-
 class DisposableLifecycleObserver(private var lifecycle: Lifecycle) : LifecycleObserver {
 
     private var enabled = false
@@ -18,7 +17,6 @@ class DisposableLifecycleObserver(private var lifecycle: Lifecycle) : LifecycleO
         lifecycle.addObserver(this)
     }
 
-
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun start() {
         if (enabled) {
@@ -29,7 +27,6 @@ class DisposableLifecycleObserver(private var lifecycle: Lifecycle) : LifecycleO
 
     fun enable() {
         enabled = true
-
     }
 
     fun putDisposableMap(tag: String, disposable: Disposable) {
@@ -65,8 +62,6 @@ class DisposableLifecycleObserver(private var lifecycle: Lifecycle) : LifecycleO
         saveDisposableMap.clear()
         mNetWorkDisposable.dispose()
         mNetWorkDisposable.clear()
-
-
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)

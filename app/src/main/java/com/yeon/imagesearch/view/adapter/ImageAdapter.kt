@@ -77,6 +77,8 @@ class ImageAdapter(private val context: Context, private val retryCallback: () -
         }
     }
 
+
+
     companion object {
         val ImageDiffCallback = object : DiffUtil.ItemCallback<ImageModel.Documents>() {
 
@@ -85,7 +87,7 @@ class ImageAdapter(private val context: Context, private val retryCallback: () -
             }
 
             override fun areContentsTheSame(oldItem: ImageModel.Documents, newItem: ImageModel.Documents): Boolean {
-                return oldItem.equals(newItem)
+                return oldItem == newItem
             }
         }
     }
@@ -125,7 +127,7 @@ class ImageAdapter(private val context: Context, private val retryCallback: () -
             controllerBuilder.setUri(imageDoc?.image_url)
             controllerBuilder.oldController = simpleDraweeView.controller
             val ratioHeight = RetrofitManager.getRatioHeight(context, imageDoc?.height?.toInt()
-                    ?: 0, imageDoc?.width?.toInt() ?: 0)
+                ?: 0, imageDoc?.width?.toInt() ?: 0)
             val draweeViewLayoutParams = simpleDraweeView.layoutParams
             val progressBarView = itemView.findViewById<ContentLoadingProgressBar>(R.id.progress_view)
             draweeViewLayoutParams.width = RetrofitManager.getWidth(context)
@@ -141,8 +143,7 @@ class ImageAdapter(private val context: Context, private val retryCallback: () -
                 }
             }
             simpleDraweeView.controller = controllerBuilder.build()
-
-            simpleDraweeView.setOnClickListener { _: View? -> context.startActivity(Intent(context, ImageDetailActivity::class.java).putExtra("item", imageDoc)) }
+            simpleDraweeView.setOnClickListener { _: View? -> context.startActivity( Intent(context, ImageDetailActivity::class.java).putExtra("item", imageDoc)) }
 
         }
 
