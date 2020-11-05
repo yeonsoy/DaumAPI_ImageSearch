@@ -1,15 +1,18 @@
 package com.yeon.imagesearch.viewmodel
 
 import android.app.Application
-import android.arch.lifecycle.*
-import io.reactivex.Single
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.Transformations
+import android.arch.lifecycle.ViewModel
+import android.arch.lifecycle.ViewModelProvider
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
-import com.yeon.imagesearch.api.SearchData
+import com.yeon.imagesearch.api.ImageRepository
 import com.yeon.imagesearch.model.ImageDataSource
 import com.yeon.imagesearch.model.ImageDataSourceFactory
 import com.yeon.imagesearch.model.ImageModel
-import com.yeon.imagesearch.model.NetworkState
+import com.yeon.imagesearch.api.NetworkState
+import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
@@ -24,16 +27,14 @@ class ImageViewModel(application: Application, viewModelInterface: ImageViewMode
     lateinit var imageListDataSource: ImageDataSourceFactory
 
     init {
-        executor = Executors.newFixedThreadPool(5)
+        executor = Executors.newFixedThreadPool(10)
         dataLayoutSubject = PublishSubject.create()
     }
 
-    override fun getSingle(): Single<ImageModel> {
-        return null!!
-    }
+    override fun getSingle(): Single<ImageModel> = null!!
 
     override fun getSingle(args: String): Single<ImageModel> {
-        return SearchData.instance.getResponse(args)
+        return ImageRepository.instance.getResponse(args)
     }
 
     fun getImages(paging: String, sort: String) {
@@ -55,9 +56,8 @@ class ImageViewModel(application: Application, viewModelInterface: ImageViewMode
     class ImageViewModelFactory(private val mApplication: Application, private val viewModelInterface: ImageViewModelInterface) : ViewModelProvider.NewInstanceFactory() {
 
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(ImageViewModel::class.java!!)) {
+            return if (modelClass.isAssignableFrom(ImageViewModel::class.java)) {
                 ImageViewModel(mApplication, viewModelInterface) as T
-
             } else {
                 throw IllegalArgumentException("ViewModel Not Found")
             }

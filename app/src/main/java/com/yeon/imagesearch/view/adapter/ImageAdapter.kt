@@ -1,8 +1,8 @@
 package com.yeon.imagesearch.view.adapter
 
-import android.annotation.SuppressLint
 import android.arch.paging.PagedListAdapter
 import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.Animatable
 import android.support.v4.widget.ContentLoadingProgressBar
 import android.support.v7.util.DiffUtil
@@ -15,10 +15,11 @@ import com.facebook.drawee.controller.BaseControllerListener
 import com.facebook.drawee.view.SimpleDraweeView
 import com.facebook.imagepipeline.image.ImageInfo
 import com.yeon.imagesearch.R
+import com.yeon.imagesearch.api.NetworkState
 import com.yeon.imagesearch.api.RetrofitManager
+import com.yeon.imagesearch.api.Status
 import com.yeon.imagesearch.model.ImageModel
-import com.yeon.imagesearch.model.NetworkState
-import com.yeon.imagesearch.model.Status
+import com.yeon.imagesearch.view.ImageDetailActivity
 import kotlinx.android.synthetic.main.item_network_state.view.*
 
 
@@ -76,7 +77,6 @@ class ImageAdapter(private val context: Context, private val retryCallback: () -
         }
     }
 
-
     companion object {
         val ImageDiffCallback = object : DiffUtil.ItemCallback<ImageModel.Documents>() {
 
@@ -84,9 +84,8 @@ class ImageAdapter(private val context: Context, private val retryCallback: () -
                 return oldItem.datetime == newItem.datetime
             }
 
-            @SuppressLint("DiffUtilEquals")
             override fun areContentsTheSame(oldItem: ImageModel.Documents, newItem: ImageModel.Documents): Boolean {
-                return oldItem == newItem
+                return oldItem.equals(newItem)
             }
         }
     }
@@ -143,7 +142,7 @@ class ImageAdapter(private val context: Context, private val retryCallback: () -
             }
             simpleDraweeView.controller = controllerBuilder.build()
 
-           // simpleDraweeView.setOnClickListener { _: View? -> context.startActivity(Intent(context, ImageDetailActivity::class.java).putExtra("item", imageDoc)) }
+            simpleDraweeView.setOnClickListener { _: View? -> context.startActivity(Intent(context, ImageDetailActivity::class.java).putExtra("item", imageDoc)) }
 
         }
 

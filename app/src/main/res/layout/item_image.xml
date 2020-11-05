@@ -4,11 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/my_image_view"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="@dimen/drawee_view_width"
+        android:layout_height="@dimen/drawee_view_width"
         fresco:actualImageScaleType="fitStart" />
 
     <android.support.v4.widget.ContentLoadingProgressBar

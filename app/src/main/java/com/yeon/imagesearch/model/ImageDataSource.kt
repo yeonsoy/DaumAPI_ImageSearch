@@ -3,7 +3,8 @@ package com.yeon.imagesearch.model
 import android.arch.lifecycle.MutableLiveData
 import android.arch.paging.PageKeyedDataSource
 import android.util.Log
-import com.yeon.imagesearch.api.SearchData
+import com.yeon.imagesearch.api.NetworkState
+import com.yeon.imagesearch.api.ImageRepository
 import com.yeon.imagesearch.viewmodel.ImageViewModel
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -26,7 +27,7 @@ class ImageDataSource(private val compositeDisposable: CompositeDisposable, priv
     override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, ImageModel.Documents>) {
         networkStateLiveData.postValue(NetworkState.LOADING)
         initialLoad.postValue(NetworkState.LOADING)
-        viewModelInterface.putDisposableMap("list", SearchData.instance.getResponse(query, sort, 1, 30)
+        viewModelInterface.putDisposableMap("list", ImageRepository.instance.getResponse(query, sort, 1, 80)
             .subscribeOn(Schedulers.io())
             .subscribe({ imageQueryList ->
                 setRetry(null)
@@ -44,7 +45,7 @@ class ImageDataSource(private val compositeDisposable: CompositeDisposable, priv
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, ImageModel.Documents>) {
         networkStateLiveData.postValue(NetworkState.LOADING)
-        viewModelInterface.putDisposableMap("list",SearchData.instance.getResponse(query, sort, params.key + 1, 30)
+        viewModelInterface.putDisposableMap("list",ImageRepository.instance.getResponse(query, sort, params.key + 1, 80)
             .subscribeOn(Schedulers.io())
             .subscribe({ imageQueryList ->
                 networkStateLiveData.postValue(NetworkState.LOADED)

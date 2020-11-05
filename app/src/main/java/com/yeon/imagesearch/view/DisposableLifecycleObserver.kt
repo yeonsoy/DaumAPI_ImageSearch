@@ -32,7 +32,6 @@ class DisposableLifecycleObserver(private var lifecycle: Lifecycle) : LifecycleO
 
     }
 
-
     fun putDisposableMap(tag: String, disposable: Disposable) {
         if (saveDisposableMap[tag] == null) {
             mNetWorkDisposable.add(disposable)
@@ -43,7 +42,6 @@ class DisposableLifecycleObserver(private var lifecycle: Lifecycle) : LifecycleO
             saveDisposableMap[tag] = disposable
             mNetWorkDisposable.add(disposable)
         }
-
     }
 
     fun removeDisposable(tag: String) {

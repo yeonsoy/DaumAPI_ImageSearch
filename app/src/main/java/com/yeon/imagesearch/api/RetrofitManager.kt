@@ -1,6 +1,7 @@
 package com.yeon.imagesearch.api
 
 import android.content.Context
+import android.util.Log
 import com.yeon.imagesearch.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -14,9 +15,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 class RetrofitManager {
     companion object  {
         fun getKaKaoAPI(): RestAPI {
-            var BASE_URL = "https://dapi.kakao.com/"
             val logging = HttpLoggingInterceptor()
             val httpClient = OkHttpClient.Builder()
+
+            val API_KEY = "a0f60e42766f7eb00662d86062741899"
+            val BASE_URL = "https://dapi.kakao.com/"
 
             // gson : json을 java객체로 만들어주는 라이브러리
             val gson = GsonBuilder()
@@ -24,7 +27,7 @@ class RetrofitManager {
                 .create()
             httpClient.addInterceptor { chain ->
                 val original = chain.request()
-                val requestBuilder  = original.newBuilder().header("Authorization","KakaoAK 61842843b28b27661f3d30bf04f71e97")
+                val requestBuilder  = original.newBuilder().header("Authorization","KakaoAK " + API_KEY)
                 val request = requestBuilder.build()
                 chain.proceed(request)
             }
@@ -32,7 +35,6 @@ class RetrofitManager {
             if(BuildConfig.DEBUG) {
                 logging.level = HttpLoggingInterceptor.Level.BODY
                 httpClient.addInterceptor(logging)
-
             }
             else {
                 logging.level = HttpLoggingInterceptor.Level.HEADERS

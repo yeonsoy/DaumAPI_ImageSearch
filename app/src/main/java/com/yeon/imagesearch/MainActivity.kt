@@ -8,9 +8,10 @@ import android.os.Bundle
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.util.Log
 import android.view.View
+import com.facebook.drawee.backends.pipeline.Fresco
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.yeon.imagesearch.model.ImageModel
-import com.yeon.imagesearch.model.Status
+import com.yeon.imagesearch.api.Status
 import com.yeon.imagesearch.view.BaseViewModelActivity
 import com.yeon.imagesearch.view.adapter.GridSpacingItemDecoration
 import com.yeon.imagesearch.view.adapter.ImageAdapter
@@ -33,10 +34,29 @@ class MainActivity : BaseViewModelActivity<ImageViewModel>(), ImageViewModel.Ima
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Fresco.initialize(this)
         setContentView(R.layout.activity_main)
+
+        /*
+        try {
+            val info = packageManager.getPackageInfo("com.yeon.imagesearch", PackageManager.GET_SIGNING_CERTIFICATES)
+            val signatures = info.signingInfo.apkContentsSigners
+            val md = MessageDigest.getInstance("SHA")
+            for (signature in signatures) {
+                val md: MessageDigest
+                md = MessageDigest.getInstance("SHA")
+                md.update(signature.toByteArray())
+                val key = String(Base64.encode(md.digest(), 0))
+                Log.d("Hash : ", "$key")
+            }
+        }
+        catch (e: Exception) {
+            Log.e("name not found", e.toString())
+        }
+        */
+
         setMessageTextSetting(getString(R.string.input_text_plz))
         adapterInit()
-
 
         mViewModel?.dataLayoutSubject?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribe { visibility ->
@@ -78,7 +98,7 @@ class MainActivity : BaseViewModelActivity<ImageViewModel>(), ImageViewModel.Ima
         val staggeredGridLayoutManager = StaggeredGridLayoutManager(2, 1)
         staggeredGridLayoutManager.orientation = StaggeredGridLayoutManager.VERTICAL
         rv_list.layoutManager = staggeredGridLayoutManager
-        rv_list.addItemDecoration(GridSpacingItemDecoration(3, 9, true))
+        rv_list.addItemDecoration(GridSpacingItemDecoration(2, 8, true))
     }
 
     override fun getImages(items: LiveData<PagedList<ImageModel.Documents>>) {

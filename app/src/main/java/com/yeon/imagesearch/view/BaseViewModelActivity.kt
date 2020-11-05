@@ -28,9 +28,7 @@ abstract class BaseViewModelActivity<T : ViewModel> : AppCompatActivity() {
         } catch (e: Exception) {
             reStart()
         }
-
     }
-
 
     private fun reStart() {
         val intent = Intent(this, MainActivity::class.java)
@@ -52,8 +50,6 @@ abstract class BaseViewModelActivity<T : ViewModel> : AppCompatActivity() {
 
     }
 
-
-
     fun getDisposable(): CompositeDisposable {
         return observer.getDisposable()
     }
@@ -62,10 +58,8 @@ abstract class BaseViewModelActivity<T : ViewModel> : AppCompatActivity() {
         return observer.getNetWorkDisposable()
     }
 
-
     fun removeDisposable(tag: String) {
         observer.removeDisposable(tag)
     }
-
 
 }
