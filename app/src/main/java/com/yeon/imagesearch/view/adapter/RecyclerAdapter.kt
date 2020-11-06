@@ -1,21 +1,17 @@
 package com.yeon.imagesearch.view.adapter
 
+import android.annotation.SuppressLint
 import android.arch.paging.PagedListAdapter
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.Animatable
-import android.support.v4.widget.ContentLoadingProgressBar
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.facebook.drawee.backends.pipeline.Fresco
-import com.facebook.drawee.controller.BaseControllerListener
-import com.facebook.drawee.view.SimpleDraweeView
-import com.facebook.imagepipeline.image.ImageInfo
+import android.widget.ImageView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.yeon.imagesearch.R
 import com.yeon.imagesearch.api.NetworkState
 import com.yeon.imagesearch.api.RetrofitManager
@@ -24,8 +20,8 @@ import com.yeon.imagesearch.model.ImageModel
 import com.yeon.imagesearch.view.ImageDetailActivity
 import kotlinx.android.synthetic.main.item_network_state.view.*
 
-
-class ImageAdapter(private val context: Context, private val retryCallback: () -> Unit) : PagedListAdapter<ImageModel.Documents, RecyclerView.ViewHolder>(ImageDiffCallback) {
+/** Displays {@link com.bumptech.glide.samples.gallery.MediaStoreData} in a recycler view. */
+class RecyclerAdapter(private val context: Context, private val retryCallback: () -> Unit) : PagedListAdapter<ImageModel.Documents, RecyclerView.ViewHolder>(ImageDiffCallback) {
     private var networkState: NetworkState? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -86,6 +82,7 @@ class ImageAdapter(private val context: Context, private val retryCallback: () -
                 return oldItem.datetime == newItem.datetime
             }
 
+            @SuppressLint("DiffUtilEquals")
             override fun areContentsTheSame(oldItem: ImageModel.Documents, newItem: ImageModel.Documents): Boolean {
                 return oldItem == newItem
             }
@@ -121,31 +118,24 @@ class ImageAdapter(private val context: Context, private val retryCallback: () -
     class ImageItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         fun bindTo(context: Context, imageDoc: ImageModel.Documents?) {
-            val simpleDraweeView = itemView.findViewById<SimpleDraweeView>(R.id.my_image_view)
-            val controllerBuilder = Fresco.newDraweeControllerBuilder()
 
-            controllerBuilder.setUri(imageDoc?.thumbnail_url)
+            val imageView = itemView.findViewById<ImageView>(R.id.my_image_view)
 
-            controllerBuilder.oldController = simpleDraweeView.controller
-            val ratioHeight = RetrofitManager.getRatioHeight(context, imageDoc?.height?.toInt()
-                ?: 0, imageDoc?.width?.toInt() ?: 0)
-            val draweeViewLayoutParams = simpleDraweeView.layoutParams
-            val progressBarView = itemView.findViewById<ContentLoadingProgressBar>(R.id.progress_view)
-            draweeViewLayoutParams.width = RetrofitManager.getWidth(context) / 3
-            draweeViewLayoutParams.height = RetrofitManager.getWidth(context) / 3 //ratioHeight / 3
-            simpleDraweeView.layoutParams = draweeViewLayoutParams
-            controllerBuilder.controllerListener = object : BaseControllerListener<ImageInfo>() {
-                override fun onFinalImageSet(id: String?, imageInfo: ImageInfo?, animatable: Animatable?) {
-                    super.onFinalImageSet(id, imageInfo, animatable)
-                    if (imageInfo == null) {
-                        return
-                    }
-                    progressBarView.visibility = View.GONE
-                }
-            }
-            simpleDraweeView.controller = controllerBuilder.build()
-            simpleDraweeView.setOnClickListener { _: View? -> context.startActivity( Intent(context, ImageDetailActivity::class.java).putExtra("item", imageDoc)) }
+            Glide.with(context)
+                .load(imageDoc?.image_url)
+                .thumbnail(
+                    Glide.with(context)
+                        .load(imageDoc?.thumbnail_url))
+                .placeholder(R.drawable.ic_placeholder)
+                .into(imageView)
 
+            val ratioHeight = RetrofitManager.getRatioHeight(context, imageDoc?.height?.toInt()?: 0, imageDoc?.width?.toInt()?: 0)
+            val imageViewLayoutParams = imageView.layoutParams
+            imageViewLayoutParams.width = RetrofitManager.getWidth(context) / 3
+            imageViewLayoutParams.height = ratioHeight / 3
+            imageView.layoutParams = imageViewLayoutParams
+
+            imageView.setOnClickListener { _: View? -> context.startActivity( Intent(context, ImageDetailActivity::class.java).putExtra("item", imageDoc)) }
         }
 
         companion object {

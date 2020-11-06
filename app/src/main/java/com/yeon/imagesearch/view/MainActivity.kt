@@ -14,7 +14,7 @@ import com.yeon.imagesearch.viewmodel.ImageViewModel
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.yeon.imagesearch.R
 import com.yeon.imagesearch.view.adapter.GridSpacingItemDecoration
-import com.yeon.imagesearch.view.adapter.ImageAdapter
+import com.yeon.imagesearch.view.adapter.RecyclerAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_main.*
@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit
 
 class MainActivity : BaseViewModelActivity<ImageViewModel>(), ImageViewModel.ImageViewModelInterface {
 
-    private lateinit var adapter: ImageAdapter
+    private lateinit var adapter: RecyclerAdapter
 
     override fun viewModel(): ImageViewModel {
         val factory = ImageViewModel.ImageViewModelFactory(application, this)
@@ -66,7 +66,7 @@ class MainActivity : BaseViewModelActivity<ImageViewModel>(), ImageViewModel.Ima
     }
 
     private fun adapterInit() {
-        adapter = ImageAdapter(this) {
+        adapter = RecyclerAdapter(this) {
             mViewModel?.retry()
         }
         setStaggeredSetting()

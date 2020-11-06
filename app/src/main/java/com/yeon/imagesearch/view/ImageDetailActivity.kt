@@ -1,15 +1,15 @@
 package com.yeon.imagesearch.view
 
-import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.widget.ImageView
 import android.widget.TextView
-import com.facebook.drawee.view.SimpleDraweeView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.yeon.imagesearch.R
 import com.yeon.imagesearch.api.RetrofitManager
 import com.yeon.imagesearch.model.ImageModel
 import java.util.*
-
 
 class ImageDetailActivity : AppCompatActivity() {
 
@@ -17,16 +17,23 @@ class ImageDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_image_detail)
         val parcelable = intent.getParcelableExtra<ImageModel.Documents>("item")!!
-        val simpleDraweeView = findViewById<SimpleDraweeView>(R.id.my_image_view)
+        val imageView = findViewById<ImageView>(R.id.my_image_view)
 
-        simpleDraweeView.setImageURI(Uri.parse(parcelable.thumbnail_url))
+        Glide.with(this)
+            .load(parcelable.image_url)
+            .thumbnail(
+                Glide.with(this)
+                    .load(parcelable.thumbnail_url))
+            .into(imageView)
 
-        val layoutParams = simpleDraweeView.layoutParams
+        val ratioHeight = RetrofitManager.getRatioHeight(this, parcelable.height.toInt(), parcelable.width.toInt())
+        val layoutParams = imageView.layoutParams
         layoutParams.width = RetrofitManager.getWidth(this)
-        layoutParams.height = RetrofitManager.getWidth(this)
-        simpleDraweeView.layoutParams = layoutParams
-        findViewById<TextView>(R.id.tv_departure).text = String.format(Locale.KOREA,"출처: %s",parcelable.display_sitename)
-        findViewById<TextView>(R.id.tv_doc_url).text =String.format(Locale.KOREA,"문서 URL: %s",parcelable.doc_url)
+        layoutParams.height = ratioHeight
+        imageView.layoutParams = layoutParams
+
+        findViewById<TextView>(R.id.tv_departure).text = String.format(Locale.KOREA, "출처: %s", parcelable.display_sitename)
+        findViewById<TextView>(R.id.tv_doc_url).text = String.format(Locale.KOREA, "문서 URL: %s", parcelable.doc_url)
     }
 
     override fun onDestroy() {

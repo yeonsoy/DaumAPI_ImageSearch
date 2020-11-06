@@ -13,7 +13,7 @@ class ImageRepository : BaseImageRepository<ImageModel>() {
     // 결과 페이지 번호
     var page: Int = 1
     // 한 페이지에 보여질 문서 수
-    var size: Int = 80
+    var size: Int = 20
 
     companion object {
         private var ourInstance: ImageRepository? = null
@@ -36,7 +36,7 @@ class ImageRepository : BaseImageRepository<ImageModel>() {
             return  null!!
     }
 
-    fun getResponse(query: String, sort: String = "accuracy", page : Int = 1,  size : Int = 80 ) : Single<ImageModel>{
+    fun getResponse(query: String, sort: String = "accuracy", page : Int = 1,  size : Int = 20 ) : Single<ImageModel>{
         this.query = query
         this.sort  = sort
         this.page = page
