@@ -1,10 +1,8 @@
 package com.yeon.imagesearch.view
 
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.view.View
 import android.widget.TextView
 import com.facebook.drawee.view.SimpleDraweeView
 import com.yeon.imagesearch.R
@@ -21,15 +19,12 @@ class ImageDetailActivity : AppCompatActivity() {
         val parcelable = intent.getParcelableExtra<ImageModel.Documents>("item")!!
         val simpleDraweeView = findViewById<SimpleDraweeView>(R.id.my_image_view)
 
-        simpleDraweeView.setImageURI(Uri.parse(parcelable.image_url))
+        simpleDraweeView.setImageURI(Uri.parse(parcelable.thumbnail_url))
 
-        val ratioHeight = RetrofitManager.getRatioHeight(this,parcelable.height.toInt(),parcelable.width.toInt())
         val layoutParams = simpleDraweeView.layoutParams
         layoutParams.width = RetrofitManager.getWidth(this)
-        layoutParams.height = ratioHeight
+        layoutParams.height = RetrofitManager.getWidth(this)
         simpleDraweeView.layoutParams = layoutParams
-        simpleDraweeView.setOnClickListener { _: View? -> startActivity( Intent(this, TransformImageActivity::class.java).putExtra("image_url", parcelable.image_url)) }
-
         findViewById<TextView>(R.id.tv_departure).text = String.format(Locale.KOREA,"출처: %s",parcelable.display_sitename)
         findViewById<TextView>(R.id.tv_doc_url).text =String.format(Locale.KOREA,"문서 URL: %s",parcelable.doc_url)
     }

@@ -4,10 +4,9 @@ import android.arch.lifecycle.ViewModel
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.facebook.drawee.backends.pipeline.Fresco
-import com.yeon.imagesearch.MainActivity
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+
 
 abstract class BaseViewModelActivity<T : ViewModel> : AppCompatActivity() {
     private lateinit var observer: DisposableLifecycleObserver

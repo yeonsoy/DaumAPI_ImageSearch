@@ -28,37 +28,37 @@ class ImageDataSource(private val compositeDisposable: CompositeDisposable, priv
         networkStateLiveData.postValue(NetworkState.LOADING)
         initialLoad.postValue(NetworkState.LOADING)
         viewModelInterface.putDisposableMap("list", ImageRepository.instance.getResponse(query, sort, 1, 80)
-            .subscribeOn(Schedulers.io())
-            .subscribe({ imageQueryList ->
-                setRetry(null)
-                initialLoad.postValue(NetworkState.LOADED)
-                networkStateLiveData.postValue(NetworkState.LOADED)
-                isData.postValue(imageQueryList.documents.isEmpty())
-                callback.onResult(imageQueryList.documents, null, 2)
+                .subscribeOn(Schedulers.io())
+                .subscribe({ imageQueryList ->
+                    setRetry(null)
+                    initialLoad.postValue(NetworkState.LOADED)
+                    networkStateLiveData.postValue(NetworkState.LOADED)
+                    isData.postValue(imageQueryList.documents.isEmpty())
+                    callback.onResult(imageQueryList.documents, null, 2)
 
-            }) { throwable ->
-                setRetry(Action { loadInitial(params, callback) })
-                networkStateLiveData.postValue(NetworkState.error(throwable.message))
-                initialLoad.postValue(NetworkState.error(throwable.message))
-            })
+                }) { throwable ->
+                    setRetry(Action { loadInitial(params, callback) })
+                    networkStateLiveData.postValue(NetworkState.error(throwable.message))
+                    initialLoad.postValue(NetworkState.error(throwable.message))
+                })
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, ImageModel.Documents>) {
         networkStateLiveData.postValue(NetworkState.LOADING)
         viewModelInterface.putDisposableMap("list", ImageRepository.instance.getResponse(query, sort, params.key + 1, 80)
-            .subscribeOn(Schedulers.io())
-            .subscribe({ imageQueryList ->
-                networkStateLiveData.postValue(NetworkState.LOADED)
-                setRetry(null)
-                val nextKey = (if (imageQueryList.meta.is_end) null else params.key + 1)
-                callback.onResult(imageQueryList.documents, nextKey)
+                .subscribeOn(Schedulers.io())
+                .subscribe({ imageQueryList ->
+                    networkStateLiveData.postValue(NetworkState.LOADED)
+                    setRetry(null)
+                    val nextKey = (if (imageQueryList.meta.is_end) null else params.key + 1)
+                    callback.onResult(imageQueryList.documents, nextKey)
 
 
-            }, { throwable ->
-                throwable.message?.let { Log.e("loadAfter", it) };
-                setRetry(Action { loadAfter(params, callback) })
-                networkStateLiveData.postValue(NetworkState.error(throwable.message))
-            }))
+                }, { throwable ->
+                    Log.e("loadAfter", throwable.message!!);
+                    setRetry(Action { loadAfter(params, callback) })
+                    networkStateLiveData.postValue(NetworkState.error(throwable.message))
+                }))
 
     }
 
@@ -76,10 +76,10 @@ class ImageDataSource(private val compositeDisposable: CompositeDisposable, priv
     fun retry() {
         if (retryCompletable != null) {
             compositeDisposable.add(retryCompletable!!
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                }, { throwable -> throwable.message?.let { Log.e("retry", it) } }))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                    }, { throwable -> Log.e("retry", throwable.message!!) }))
         }
     }
 }

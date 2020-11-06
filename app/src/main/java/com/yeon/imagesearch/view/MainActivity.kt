@@ -1,4 +1,4 @@
-package com.yeon.imagesearch
+package com.yeon.imagesearch.view
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
@@ -8,14 +8,13 @@ import android.os.Bundle
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.util.Log
 import android.view.View
-import com.facebook.drawee.backends.pipeline.Fresco
-import com.jakewharton.rxbinding2.widget.RxTextView
 import com.yeon.imagesearch.model.ImageModel
 import com.yeon.imagesearch.api.Status
-import com.yeon.imagesearch.view.BaseViewModelActivity
+import com.yeon.imagesearch.viewmodel.ImageViewModel
+import com.jakewharton.rxbinding2.widget.RxTextView
+import com.yeon.imagesearch.R
 import com.yeon.imagesearch.view.adapter.GridSpacingItemDecoration
 import com.yeon.imagesearch.view.adapter.ImageAdapter
-import com.yeon.imagesearch.viewmodel.ImageViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_main.*
@@ -29,59 +28,41 @@ class MainActivity : BaseViewModelActivity<ImageViewModel>(), ImageViewModel.Ima
     override fun viewModel(): ImageViewModel {
         val factory = ImageViewModel.ImageViewModelFactory(application, this)
         return ViewModelProviders.of(this, factory)
-            .get<ImageViewModel>(ImageViewModel::class.java)
+                .get<ImageViewModel>(ImageViewModel::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        /*
-        try {
-            val info = packageManager.getPackageInfo("com.yeon.imagesearch", PackageManager.GET_SIGNING_CERTIFICATES)
-            val signatures = info.signingInfo.apkContentsSigners
-            val md = MessageDigest.getInstance("SHA")
-            for (signature in signatures) {
-                val md: MessageDigest
-                md = MessageDigest.getInstance("SHA")
-                md.update(signature.toByteArray())
-                val key = String(Base64.encode(md.digest(), 0))
-                Log.d("Hash : ", "$key")
-            }
-        }
-        catch (e: Exception) {
-            Log.e("name not found", e.toString())
-        }
-        */
-
         setMessageTextSetting(getString(R.string.input_text_plz))
         adapterInit()
 
-        mViewModel?.dataLayoutSubject?.observeOn(AndroidSchedulers.mainThread())
-            ?.subscribe { visibility ->
-                if (visibility) {
-                    tv_msg.visibility = View.VISIBLE
-                    rv_list.visibility = View.GONE
-                } else {
-                    tv_msg.visibility = View.GONE
-                    rv_list.visibility = View.VISIBLE
-                }
-            }
 
-        RxTextView.textChanges(et_query)
-            .throttleLast(1, TimeUnit.SECONDS,AndroidSchedulers.mainThread())
-            .subscribe(
-                { text ->
-                    if (text.isNotEmpty()) {
-                        removeDisposable("list")
-                        mViewModel?.getImages(text.toString(), "accuracy")
-                        mViewModel?.dataLayoutSubject?.onNext(false)
+        mViewModel?.dataLayoutSubject?.observeOn(AndroidSchedulers.mainThread())
+                ?.subscribe { visibility ->
+                    if (visibility) {
+                        tv_msg.visibility = View.VISIBLE
+                        rv_list.visibility = View.GONE
                     } else {
-                        setMessageTextSetting(getString(R.string.input_text_plz))
-                        mViewModel?.dataLayoutSubject?.onNext(true)
+                        tv_msg.visibility = View.GONE
+                        rv_list.visibility = View.VISIBLE
                     }
                 }
-            ) { th -> run { Log.e("textChanges", th.message.toString()) } }
+
+        RxTextView.textChanges(et_query)
+                .throttleLast(1, TimeUnit.SECONDS,AndroidSchedulers.mainThread())
+                .subscribe(
+                        { text ->
+                           if (text.isNotEmpty()) {
+                                removeDisposable("list")
+                                mViewModel?.getImagesPaging(text.toString(), "accuracy")
+                                mViewModel?.dataLayoutSubject?.onNext(false)
+                            } else {
+                                setMessageTextSetting(getString(R.string.input_text_plz))
+                                mViewModel?.dataLayoutSubject?.onNext(true)
+                            }
+                        }
+                ) { th -> run { Log.e("textChanges", th.message!!) } }
     }
 
     private fun adapterInit() {
@@ -94,10 +75,10 @@ class MainActivity : BaseViewModelActivity<ImageViewModel>(), ImageViewModel.Ima
     }
 
     private fun setStaggeredSetting() {
-        val staggeredGridLayoutManager = StaggeredGridLayoutManager(2, 1)
+        val staggeredGridLayoutManager = StaggeredGridLayoutManager(3, 1)
         staggeredGridLayoutManager.orientation = StaggeredGridLayoutManager.VERTICAL
         rv_list.layoutManager = staggeredGridLayoutManager
-        rv_list.addItemDecoration(GridSpacingItemDecoration(2, 8, true))
+        rv_list.addItemDecoration(GridSpacingItemDecoration(3, 0, true))
     }
 
     override fun getImages(items: LiveData<PagedList<ImageModel.Documents>>) {
@@ -126,12 +107,15 @@ class MainActivity : BaseViewModelActivity<ImageViewModel>(), ImageViewModel.Ima
 
                 }
             })
+
+
         }
     }
 
     private fun setMessageTextSetting(msg: String) {
         tv_msg.text = msg
     }
+
 
     override fun putDisposableMap(tag: String, disposable: Disposable) {
         super.putDisposableMap(tag, disposable)

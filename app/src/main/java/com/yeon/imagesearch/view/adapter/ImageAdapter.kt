@@ -1,12 +1,14 @@
 package com.yeon.imagesearch.view.adapter
 
 import android.arch.paging.PagedListAdapter
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Animatable
 import android.support.v4.widget.ContentLoadingProgressBar
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -77,8 +79,6 @@ class ImageAdapter(private val context: Context, private val retryCallback: () -
         }
     }
 
-
-
     companion object {
         val ImageDiffCallback = object : DiffUtil.ItemCallback<ImageModel.Documents>() {
 
@@ -124,14 +124,15 @@ class ImageAdapter(private val context: Context, private val retryCallback: () -
             val simpleDraweeView = itemView.findViewById<SimpleDraweeView>(R.id.my_image_view)
             val controllerBuilder = Fresco.newDraweeControllerBuilder()
 
-            controllerBuilder.setUri(imageDoc?.image_url)
+            controllerBuilder.setUri(imageDoc?.thumbnail_url)
+
             controllerBuilder.oldController = simpleDraweeView.controller
             val ratioHeight = RetrofitManager.getRatioHeight(context, imageDoc?.height?.toInt()
                 ?: 0, imageDoc?.width?.toInt() ?: 0)
             val draweeViewLayoutParams = simpleDraweeView.layoutParams
             val progressBarView = itemView.findViewById<ContentLoadingProgressBar>(R.id.progress_view)
-            draweeViewLayoutParams.width = RetrofitManager.getWidth(context)
-            draweeViewLayoutParams.height = ratioHeight / 2
+            draweeViewLayoutParams.width = RetrofitManager.getWidth(context) / 3
+            draweeViewLayoutParams.height = RetrofitManager.getWidth(context) / 3 //ratioHeight / 3
             simpleDraweeView.layoutParams = draweeViewLayoutParams
             controllerBuilder.controllerListener = object : BaseControllerListener<ImageInfo>() {
                 override fun onFinalImageSet(id: String?, imageInfo: ImageInfo?, animatable: Animatable?) {

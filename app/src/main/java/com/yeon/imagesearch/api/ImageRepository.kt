@@ -3,8 +3,8 @@ package com.yeon.imagesearch.api
 import com.yeon.imagesearch.model.BaseModel
 import com.yeon.imagesearch.model.ImageModel
 import io.reactivex.Single
+import java.util.LinkedHashMap
 
-// 싱글톤 객체 (동일 구조 여러 번 사용하기)
 class ImageRepository : BaseImageRepository<ImageModel>() {
     // 검색을 원하는 질의어
     var query: String = ""
@@ -31,19 +31,22 @@ class ImageRepository : BaseImageRepository<ImageModel>() {
             }
     }
 
-    override fun getResponse(): Single<BaseModel> = null!!
 
-    fun getResponse(query: String, sort: String = "accuracy", page : Int = 1,  size : Int = 80 ) : Single<ImageModel> {
+    override fun getResponse(): Single<BaseModel> {
+            return  null!!
+    }
+
+    fun getResponse(query: String, sort: String = "accuracy", page : Int = 1,  size : Int = 80 ) : Single<ImageModel>{
         this.query = query
         this.sort  = sort
         this.page = page
         this.size = size
 
         return RetrofitManager.getKakaoAPI()
-            .getSearchImage(getQuery())
+                .getSearchImage(getQuery())
     }
 
-    override fun queryValuesMap(): java.util.LinkedHashMap<String, String> {
+    override fun queryValuesMap(): LinkedHashMap<String, String> {
         val valuesMap = getValuesMap()
         valuesMap["query"] = query
         valuesMap["sort"] = sort
