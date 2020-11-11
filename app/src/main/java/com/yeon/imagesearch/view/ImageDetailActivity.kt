@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.yeon.imagesearch.R
 import com.yeon.imagesearch.api.RetrofitManager
 import com.yeon.imagesearch.model.ImageModel
+import java.text.SimpleDateFormat
 import java.util.*
 
 class ImageDetailActivity : AppCompatActivity() {
@@ -27,11 +28,10 @@ class ImageDetailActivity : AppCompatActivity() {
         Glide.with(this)
                 .load(parcelable.image_url)
                 .placeholder(circularProgressDrawable)
-                .thumbnail(
-                        Glide.with(this)
-                                .load(parcelable.thumbnail_url)
-                                .override(parcelable.width.toInt(), parcelable.height.toInt())
-                                .centerCrop())
+                .thumbnail(Glide.with(this)
+                        .load(parcelable.thumbnail_url)
+                        .override(parcelable.width.toInt(), parcelable.height.toInt())
+                        .centerCrop())
                 .into(imageView)
 
         val ratioHeight = RetrofitManager.getRatioHeight(this, parcelable.height.toInt(), parcelable.width.toInt())
@@ -40,8 +40,11 @@ class ImageDetailActivity : AppCompatActivity() {
         layoutParams.height = ratioHeight
         imageView.layoutParams = layoutParams
 
+        val parser =  SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+        val formatter = SimpleDateFormat("yyyy.MM.dd HH:mm:ss")
+
         findViewById<TextView>(R.id.tv_departure).text = String.format(Locale.KOREA, "출처: %s", parcelable.display_sitename)
-        findViewById<TextView>(R.id.tv_doc_url).text = String.format(Locale.KOREA, "문서 URL: %s", parcelable.doc_url)
+        findViewById<TextView>(R.id.tv_doc_url).text = String.format(Locale.KOREA, "문서 작성시각: %s", formatter.format(parser.parse(parcelable.datetime)))
     }
 
     override fun onDestroy() {

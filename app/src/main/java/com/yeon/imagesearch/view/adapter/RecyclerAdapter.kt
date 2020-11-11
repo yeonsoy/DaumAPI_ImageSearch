@@ -128,16 +128,16 @@ class RecyclerAdapter(private val context: Context, private val retryCallback: (
             circularProgressDrawable.start()
 
             Glide.with(context)
-                    .load(imageDoc?.image_url)
+                    .load(imageDoc!!.image_url)
                     .thumbnail(
                             Glide.with(context)
-                                    .load(imageDoc?.thumbnail_url)
-                                    .override(imageDoc?.width?.toInt()!!, imageDoc?.height?.toInt()!!)
+                                    .load(imageDoc.thumbnail_url)
+                                    .override(imageDoc.width.toInt(), imageDoc.height.toInt())
                                     .centerCrop())
                     .placeholder(circularProgressDrawable)
                     .into(imageView)
 
-            val ratioHeight = RetrofitManager.getRatioHeight(context, imageDoc.height?.toInt(), imageDoc?.width?.toInt())
+            val ratioHeight = RetrofitManager.getRatioHeight(context, imageDoc.height.toInt(), imageDoc.width.toInt())
             val imageViewLayoutParams = imageView.layoutParams
             imageViewLayoutParams.width = RetrofitManager.getWidth(context) / 3
             imageViewLayoutParams.height = ratioHeight / 3

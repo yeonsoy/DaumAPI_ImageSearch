@@ -34,9 +34,8 @@ class MainActivity : BaseViewModelActivity<ImageViewModel>(), ImageViewModel.Ima
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setMessageTextSetting(getString(R.string.input_text_plz))
+        setMessageTextSetting(getString(R.string.input_text))
         adapterInit()
-
 
         mViewModel?.dataLayoutSubject?.observeOn(AndroidSchedulers.mainThread())
                 ?.subscribe { visibility ->
@@ -58,7 +57,7 @@ class MainActivity : BaseViewModelActivity<ImageViewModel>(), ImageViewModel.Ima
                                 mViewModel?.getImagesPaging(text.toString(), "accuracy")
                                 mViewModel?.dataLayoutSubject?.onNext(false)
                             } else {
-                                setMessageTextSetting(getString(R.string.input_text_plz))
+                                setMessageTextSetting(getString(R.string.input_text))
                                 mViewModel?.dataLayoutSubject?.onNext(true)
                             }
                         }
