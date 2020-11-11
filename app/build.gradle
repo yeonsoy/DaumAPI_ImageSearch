@@ -67,6 +67,5 @@ dependencies {
     implementation 'android.arch.paging:runtime:1.0.1'
 
     implementation 'com.github.bumptech.glide:glide:4.9.0'
-    kapt "android.arch.lifecycle:compiler:1.0.0"
     kapt 'com.github.bumptech.glide:compiler:4.9.0'
 }

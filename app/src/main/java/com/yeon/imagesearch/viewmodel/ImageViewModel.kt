@@ -61,7 +61,7 @@ class ImageViewModel(application: Application, viewModelInterface: ImageViewMode
     class ImageViewModelFactory(private val mApplication: Application, private val viewModelInterface: ImageViewModelInterface) : ViewModelProvider.NewInstanceFactory() {
 
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(ImageViewModel::class.java!!)) {
+            return if (modelClass.isAssignableFrom(ImageViewModel::class.java)) {
                 ImageViewModel(mApplication, viewModelInterface) as T
 
             } else {
