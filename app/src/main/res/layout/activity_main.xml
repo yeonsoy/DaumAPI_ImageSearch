@@ -21,7 +21,7 @@
         android:paddingRight="@dimen/common_margin_medium"
         app:contentInsetStart="0dp">
 
-        <EditText
+        <com.yeon.imagesearch.view.ClearEditText
             android:id="@+id/et_query"
             android:layout_width="match_parent"
             android:layout_height="@dimen/search_edit_height"
