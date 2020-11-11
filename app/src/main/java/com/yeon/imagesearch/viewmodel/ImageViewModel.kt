@@ -46,7 +46,7 @@ class ImageViewModel(application: Application, viewModelInterface: ImageViewMode
         netWorkState = Transformations.switchMap<ImageDataSource, NetworkState>(imageListDataSource.sourceFactoryLiveData) { it.networkStateLiveData }
         refreshState = Transformations.switchMap<ImageDataSource, NetworkState>(imageListDataSource.sourceFactoryLiveData) { it.initialLoad }
         dataState = Transformations.switchMap<ImageDataSource, Boolean>(imageListDataSource.sourceFactoryLiveData) { it.isData }
-        userList = LivePagedListBuilder(imageListDataSource, 20)
+        userList = LivePagedListBuilder(imageListDataSource, 30)
                 .setFetchExecutor(executor)
                 .build()
 

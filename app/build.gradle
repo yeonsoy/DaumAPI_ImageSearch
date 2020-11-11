@@ -57,7 +57,7 @@ dependencies {
     // alternatively, just LiveData
     implementation "android.arch.lifecycle:livedata:$lifecycle_version"
 
-    annotationProcessor "android.arch.lifecycle:compiler:$lifecycle_version"
+    kapt "android.arch.lifecycle:compiler:$lifecycle_version"
     implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
     implementation "com.squareup.retrofit2:converter-gson:$retrofit2_version"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$rxjava2_version"

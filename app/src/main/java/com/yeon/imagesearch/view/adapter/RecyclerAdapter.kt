@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.arch.paging.PagedListAdapter
 import android.content.Context
 import android.content.Intent
+import android.support.v4.widget.CircularProgressDrawable
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -121,15 +122,22 @@ class RecyclerAdapter(private val context: Context, private val retryCallback: (
 
             val imageView = itemView.findViewById<ImageView>(R.id.my_image_view)
 
-            Glide.with(context)
-                .load(imageDoc?.image_url)
-                .thumbnail(
-                    Glide.with(context)
-                        .load(imageDoc?.thumbnail_url))
-                .placeholder(R.drawable.ic_placeholder)
-                .into(imageView)
+            val circularProgressDrawable = CircularProgressDrawable(context)
+            circularProgressDrawable.strokeWidth = 5f
+            circularProgressDrawable.centerRadius = 30f
+            circularProgressDrawable.start()
 
-            val ratioHeight = RetrofitManager.getRatioHeight(context, imageDoc?.height?.toInt()?: 0, imageDoc?.width?.toInt()?: 0)
+            Glide.with(context)
+                    .load(imageDoc?.image_url)
+                    .thumbnail(
+                            Glide.with(context)
+                                    .load(imageDoc?.thumbnail_url)
+                                    .override(imageDoc?.width?.toInt()!!, imageDoc?.height?.toInt()!!)
+                                    .centerCrop())
+                    .placeholder(circularProgressDrawable)
+                    .into(imageView)
+
+            val ratioHeight = RetrofitManager.getRatioHeight(context, imageDoc.height?.toInt(), imageDoc?.width?.toInt())
             val imageViewLayoutParams = imageView.layoutParams
             imageViewLayoutParams.width = RetrofitManager.getWidth(context) / 3
             imageViewLayoutParams.height = ratioHeight / 3
