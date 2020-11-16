@@ -1,5 +1,9 @@
 package com.yeon.imagesearch.util
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -10,6 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 import java.util.*
+import kotlin.collections.ArrayList
 
 interface DaumAPI {
   @GET("v2/search/image")
@@ -18,7 +23,8 @@ interface DaumAPI {
     @Query("query") sort: String? = "accuracy", // 결과 문서 정렬 방식 (accuracy : 정확도순, recency : 최신순)
     @Query("query") page: Int? = 1, // 결과 페이지 번호 (1 ~ 50)
     @Query("query") size: Int? = 80
-  ): Call<ImageModel.Result>//Observable<ImageModel.Result>
+  ): Call<ImageModel.Result>
+  // Observable<ImageModel.Result>
 
   companion object {
     private const val BASE_URL = "https://dapi.kakao.com"
@@ -48,6 +54,20 @@ interface DaumAPI {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
         .create(DaumAPI::class.java)
+    }
+
+    fun Context.isInternetAvailable() =
+      (getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).run {
+        getNetworkCapabilities(activeNetwork)?.run {
+          hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
+                  || hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+                  || hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
+        } ?: false
+      }
+
+    fun getImageDocuments(result: ImageModel.Result) : ArrayList<Documents>
+    {
+      return result.documents
     }
   }
 }

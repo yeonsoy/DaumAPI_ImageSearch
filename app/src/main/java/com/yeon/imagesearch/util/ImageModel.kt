@@ -7,7 +7,7 @@ object ImageModel {
         var meta: Meta,
 
         @SerializedName("documents")
-        var documents: List<Documents>
+        var documents: ArrayList<Documents>
     )
 }
 
