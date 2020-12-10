@@ -23,10 +23,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    dataBinding {
+        enabled = true
+    }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }
@@ -49,15 +55,24 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit2_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit2_version"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit2_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1"
 
     // okhttp
     implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
 
+    // fresco
+    implementation 'com.facebook.fresco:fresco:2.3.0'
+
     // glide
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     kapt 'com.github.bumptech.glide:compiler:4.9.0'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+
+    // epoxy
+    implementation "com.airbnb.android:epoxy:4.2.0"
+    implementation 'com.airbnb.android:epoxy-paging:4.1.0'
+    kapt "com.airbnb.android:epoxy-processor:4.2.0"
 
     // 코어
     implementation "org.koin:koin-core:$koin_version"
