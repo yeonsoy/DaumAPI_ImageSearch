@@ -1,15 +1,11 @@
 package com.yeon.mvvm.view.epoxy
 
 import android.content.Context
-import android.net.Uri
-import android.view.View
-import android.widget.ImageView
 import android.widget.LinearLayout
-import androidx.databinding.DataBindingUtil.bind
 import com.airbnb.epoxy.EpoxyAttribute
-import com.airbnb.epoxy.EpoxyHolder
 import com.airbnb.epoxy.EpoxyModelClass
 import com.airbnb.epoxy.EpoxyModelWithHolder
+import com.facebook.drawee.view.SimpleDraweeView
 import com.yeon.mvvm.R
 import com.yeon.mvvm.model.Documents
 
@@ -28,9 +24,9 @@ abstract class ImageItemEpoxyHolder : EpoxyModelWithHolder<ImageItemEpoxyHolder.
     override fun bind(holder: Holder) {
         val draweeViewLayoutParams = holder.ivImage.layoutParams
         draweeViewLayoutParams.width = getWidth(holder.root.context) / divide
-        draweeViewLayoutParams.height = draweeViewLayoutParams.width
+        draweeViewLayoutParams.height = getRatioHeight(draweeViewLayoutParams.width, data.height, data.width)// draweeViewLayoutParams.width
         holder.ivImage.layoutParams = draweeViewLayoutParams
-        holder.ivImage.setImageURI(Uri.parse(data.image_url))
+        holder.ivImage.setImageURI(data.image_url)
         holder.ivImage.setOnClickListener { listener() }
     }
 
@@ -53,7 +49,7 @@ abstract class ImageItemEpoxyHolder : EpoxyModelWithHolder<ImageItemEpoxyHolder.
 
     class Holder : BaseEpoxyHolder() {
         // val context = itemView.context by bind()
-        val ivImage: ImageView by bind(R.id.ivImage)
+        val ivImage: SimpleDraweeView by bind(R.id.ivImage)
         val root: LinearLayout by bind(R.id.root)
     }
 

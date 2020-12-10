@@ -2,7 +2,6 @@ package com.yeon.mvvm.view.epoxy
 
 import android.content.Context
 import android.view.View
-import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyHolder
 import com.airbnb.epoxy.EpoxyModelClass
 import com.airbnb.epoxy.EpoxyModelWithHolder

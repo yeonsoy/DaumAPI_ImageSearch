@@ -7,7 +7,6 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.airbnb.epoxy.EpoxyController
-import com.airbnb.epoxy.stickyheader.StickyHeaderCallbacks
 import com.yeon.mvvm.model.Documents
 import com.yeon.mvvm.view.ImageDetailActivity
 import com.yeon.mvvm.viewmodel.ImageViewModel

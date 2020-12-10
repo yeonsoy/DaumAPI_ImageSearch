@@ -7,16 +7,15 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.yeon.mvvm.R
 import com.yeon.mvvm.model.Documents
-import org.w3c.dom.Text
 import java.text.SimpleDateFormat
 
 class ImageDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_image_detail)
         val imageData = intent.getSerializableExtra("item") as Documents
 
         val parser =  SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
