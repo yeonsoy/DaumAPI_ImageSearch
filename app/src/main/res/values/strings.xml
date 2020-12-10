@@ -1,8 +1,3 @@
 <resources>
-    <string name="app_name">ImageSearch</string>
-    <string name="search_hint">검색어를 입력해주세요</string>
-
-    <string name="retry">Retry</string>
-    <string name="input_text">검색어를 입력해주세요</string>
-    <string name="no_result">검색 결과가 없습니다.</string>
+    <string name="app_name">mvvm</string>
 </resources>
