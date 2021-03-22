@@ -84,6 +84,7 @@ class MainFragment : Fragment() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (!recyclerView.canScrollVertically(1) && !viewModel.is_end) {
+                    // TODO 에폭시 페이징3 사용으로 변경
                     page++;
                     viewModel.fetchData(keywords, "accuracy", page, page_count, viewController)
                 }
